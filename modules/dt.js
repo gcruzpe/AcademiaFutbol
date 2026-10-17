@@ -1,0 +1,1238 @@
+// modules/dt.js - Módulo de Directores Técnicos (DT) - Editor Táctico Profesional
+
+// Variables globales del editor
+let stage = null;
+let layer = null;
+let fieldLayer = null;
+let playersLayer = null;
+let drawingLayer = null;
+let animationLayer = null;
+let selectedElement = null;
+let isDrawingMode = false;
+let currentTool = 'select';
+let animationSteps = [];
+let currentStep = 0;
+let playerCounter = 1;
+let coneCounter = 1;
+let isAnimating = false;
+let animationTimeline = null;
+
+// Configuración del campo
+const FIELD_CONFIG = {
+    width: 900,
+    height: 600,
+    padding: 20
+};
+
+// Colores de equipos
+const TEAM_COLORS = {
+    team1: '#0066FF',
+    team2: '#FF3333',
+    neutral: '#FFD700'
+};
+
+async function renderDT() {
+    const container = document.getElementById('contentContainer');
+
+    container.innerHTML = `
+        <div class="dt-container">
+            <!-- Panel Superior de Herramientas -->
+            <div class="dt-toolbar">
+                <div class="toolbar-section">
+                    <h4 style="font-family:'Roboto', Arial, sans-serif; margin: 0;">
+                        <i class="bi bi-person-badge"></i> Editor Táctico Profesional
+                    </h4>
+                </div>
+                <div class="toolbar-section">
+                    <div class="btn-group" role="group">
+                        <button class="btn btn-sm btn-primary" onclick="dtNuevoEjercicio()" title="Nuevo Ejercicio">
+                            <i class="bi bi-file-earmark-plus"></i> Nuevo
+                        </button>
+                        <button class="btn btn-sm btn-success" onclick="dtGuardarEjercicio()" title="Guardar Ejercicio">
+                            <i class="bi bi-save"></i> Guardar
+                        </button>
+                        <button class="btn btn-sm btn-info" onclick="dtCargarEjercicios()" title="Cargar Ejercicio">
+                            <i class="bi bi-folder-open"></i> Cargar
+                        </button>
+                    </div>
+                    <div class="btn-group ms-2" role="group">
+                        <button class="btn btn-sm btn-warning" onclick="dtExportarImagen()" title="Exportar como Imagen">
+                            <i class="bi bi-image"></i> JPG
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="dtExportarVideo()" title="Exportar como Video">
+                            <i class="bi bi-film"></i> MP4
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contenedor Principal -->
+            <div class="dt-main-content">
+                <!-- Panel Lateral Izquierdo - Herramientas -->
+                <div class="dt-sidebar-left">
+                    <div class="dt-tools-panel">
+                        <h6 class="dt-panel-title"><i class="bi bi-tools"></i> Herramientas</h6>
+                        
+                        <!-- Herramientas de Selección -->
+                        <div class="dt-tool-group">
+                            <button class="dt-tool-btn active" data-tool="select" onclick="dtSetTool('select')" title="Seleccionar">
+                                <i class="bi bi-cursor"></i>
+                            </button>
+                            <button class="dt-tool-btn" data-tool="draw" onclick="dtSetTool('draw')" title="Dibujar">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="dt-tool-btn" data-tool="arrow" onclick="dtSetTool('arrow')" title="Flecha">
+                                <i class="bi bi-arrow-right"></i>
+                            </button>
+                            <button class="dt-tool-btn" data-tool="zone" onclick="dtSetTool('zone')" title="Zona">
+                                <i class="bi bi-bounding-box"></i>
+                            </button>
+                        </div>
+
+                        <hr>
+
+                        <!-- Jugadores -->
+                        <h6 class="dt-panel-title"><i class="bi bi-people"></i> Jugadores</h6>
+                        <div class="dt-elements-grid">
+                            <button class="dt-element-btn" onclick="dtAddPlayer('team1')" title="Jugador Equipo 1">
+                                <div class="player-preview" style="background: ${TEAM_COLORS.team1};"></div>
+                                <span>Equipo 1</span>
+                            </button>
+                            <button class="dt-element-btn" onclick="dtAddPlayer('team2')" title="Jugador Equipo 2">
+                                <div class="player-preview" style="background: ${TEAM_COLORS.team2};"></div>
+                                <span>Equipo 2</span>
+                            </button>
+                            <button class="dt-element-btn" onclick="dtAddPlayer('neutral')" title="Jugador Neutral">
+                                <div class="player-preview" style="background: ${TEAM_COLORS.neutral};"></div>
+                                <span>Neutral</span>
+                            </button>
+                            <button class="dt-element-btn" onclick="dtAddBall()" title="Balón">
+                                <div class="ball-preview"></div>
+                                <span>Balón</span>
+                            </button>
+                        </div>
+
+                        <hr>
+
+                        <!-- Materiales -->
+                        <h6 class="dt-panel-title"><i class="bi bi-cone-striped"></i> Materiales</h6>
+                        <div class="dt-elements-grid">
+                            <button class="dt-element-btn" onclick="dtAddCone('orange')" title="Cono Naranja">
+                                <div class="cone-preview" style="background: #FF8C00;"></div>
+                                <span>Cono</span>
+                            </button>
+                            <button class="dt-element-btn" onclick="dtAddCone('yellow')" title="Cono Amarillo">
+                                <div class="cone-preview" style="background: #FFD700;"></div>
+                                <span>Cono</span>
+                            </button>
+                            <button class="dt-element-btn" onclick="dtAddGoal()" title="Arco">
+                                <i class="bi bi-grid-3x3" style="font-size: 24px;"></i>
+                                <span>Arco</span>
+                            </button>
+                        </div>
+
+                        <hr>
+
+                        <!-- Acciones -->
+                        <div class="dt-actions">
+                            <button class="btn btn-sm btn-danger w-100 mb-2" onclick="dtDeleteSelected()" title="Eliminar Seleccionado">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </button>
+                            <button class="btn btn-sm btn-secondary w-100" onclick="dtClearField()" title="Limpiar Campo">
+                                <i class="bi bi-x-circle"></i> Limpiar Todo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Canvas del Campo -->
+                <div class="dt-canvas-container">
+                    <div id="dtFieldCanvas"></div>
+                    
+                    <!-- Controles de Animación -->
+                    <div class="dt-animation-controls">
+                        <div class="animation-timeline">
+                            <button class="btn btn-sm btn-primary" onclick="dtAddAnimationStep()" title="Añadir Paso">
+                                <i class="bi bi-plus-circle"></i> Añadir Paso
+                            </button>
+                            <button class="btn btn-sm btn-success" onclick="dtPlayAnimation()" title="Reproducir">
+                                <i class="bi bi-play-fill"></i> Play
+                            </button>
+                            <button class="btn btn-sm btn-warning" onclick="dtPauseAnimation()" title="Pausar">
+                                <i class="bi bi-pause-fill"></i> Pausa
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="dtStopAnimation()" title="Detener">
+                                <i class="bi bi-stop-fill"></i> Stop
+                            </button>
+                            <span class="ms-3">Paso: <strong id="dtCurrentStep">0</strong> / <strong id="dtTotalSteps">0</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Panel Lateral Derecho - Propiedades -->
+                <div class="dt-sidebar-right">
+                    <div class="dt-properties-panel">
+                        <h6 class="dt-panel-title"><i class="bi bi-sliders"></i> Propiedades</h6>
+                        <div id="dtPropertiesContent">
+                            <p class="text-muted text-center">Selecciona un elemento para ver sus propiedades</p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Pasos de Animación -->
+                    <div class="dt-steps-panel">
+                        <h6 class="dt-panel-title"><i class="bi bi-list-ol"></i> Pasos de Animación</h6>
+                        <div id="dtStepsList" class="dt-steps-list">
+                            <p class="text-muted text-center">No hay pasos de animación</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Guardar Ejercicio -->
+        <div class="modal fade" id="modalGuardarEjercicio" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title"><i class="bi bi-save"></i> Guardar Ejercicio</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formGuardarEjercicio">
+                            <input type="hidden" id="ejercicioId">
+                            <div class="mb-3">
+                                <label class="form-label">Nombre del Ejercicio *</label>
+                                <input type="text" class="form-control" id="ejercicioNombre" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Categoría *</label>
+                                <select class="form-select" id="ejercicioCategoria" required>
+                                    <option value="tecnico">Técnico</option>
+                                    <option value="tactico">Táctico</option>
+                                    <option value="fisico">Físico</option>
+                                    <option value="estrategia">Estrategia</option>
+                                    <option value="calentamiento">Calentamiento</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Descripción</label>
+                                <textarea class="form-control" id="ejercicioDescripcion" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Duración (minutos)</label>
+                                <input type="number" class="form-control" id="ejercicioDuracion" min="1">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-success" onclick="dtGuardarEjercicioConfirm()">
+                            <i class="bi bi-save"></i> Guardar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Cargar Ejercicios -->
+        <div class="modal fade" id="modalCargarEjercicios" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-info text-dark">
+                        <h5 class="modal-title"><i class="bi bi-folder-open"></i> Mis Ejercicios</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="buscarEjercicio" placeholder="Buscar ejercicio...">
+                        </div>
+                        <div id="listaEjercicios" class="ejercicios-grid">
+                            <p class="text-muted text-center">No hay ejercicios guardados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Cargar estilos CSS específicos para el módulo DT
+    await dtLoadStyles();
+
+    // Inicializar el canvas con Konva.js
+    await dtInitCanvas();
+}
+
+// Cargar estilos CSS del módulo DT
+async function dtLoadStyles() {
+    const styles = `
+        <style id="dt-module-styles">
+            .dt-container {
+                height: calc(100vh - 80px);
+                display: flex;
+                flex-direction: column;
+                background: #f5f7fa;
+            }
+
+            .dt-toolbar {
+                background: white;
+                padding: 15px 20px;
+                border-bottom: 2px solid #e1e8ed;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .toolbar-section {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+
+            .dt-main-content {
+                flex: 1;
+                display: flex;
+                gap: 15px;
+                padding: 15px;
+                overflow: hidden;
+            }
+
+            .dt-sidebar-left,
+            .dt-sidebar-right {
+                background: white;
+                border-radius: 8px;
+                padding: 15px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                overflow-y: auto;
+            }
+
+            .dt-sidebar-left {
+                width: 220px;
+                flex-shrink: 0;
+            }
+
+            .dt-sidebar-right {
+                width: 250px;
+                flex-shrink: 0;
+            }
+
+
+            .dt-canvas-container {
+                flex: 1;
+                background: white;
+                border-radius: 8px;
+                padding: 5px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            #dtFieldCanvas {
+                flex: 1;
+                background: #2d5016;
+                border-radius: 4px;
+                overflow: hidden;
+                position: relative;
+                width: 100%;
+                min-height: 400px;
+            }
+
+            #dtFieldCanvas > div {
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+            #dtFieldCanvas canvas {
+                display: block !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+
+            .dt-panel-title {
+                font-weight: 600;
+                color: #1e56a0;
+                margin-bottom: 12px;
+                font-size: 14px;
+            }
+
+            .dt-tool-group {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+                margin-bottom: 15px;
+            }
+
+            .dt-tool-btn {
+                background: #f8f9fa;
+                border: 2px solid #dee2e6;
+                border-radius: 6px;
+                padding: 12px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-size: 20px;
+                color: #495057;
+            }
+
+            .dt-tool-btn:hover {
+                background: #e9ecef;
+                border-color: #1e56a0;
+                transform: translateY(-2px);
+            }
+
+            .dt-tool-btn.active {
+                background: #1e56a0;
+                border-color: #1e56a0;
+                color: white;
+            }
+
+            .dt-elements-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .dt-element-btn {
+                background: #f8f9fa;
+                border: 2px solid #dee2e6;
+                border-radius: 6px;
+                padding: 10px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+            }
+
+            .dt-element-btn:hover {
+                background: #e9ecef;
+                border-color: #1e56a0;
+                transform: translateY(-2px);
+            }
+
+            .player-preview {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                border: 2px solid white;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            }
+
+            .ball-preview {
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                background: white;
+                border: 2px solid #333;
+                position: relative;
+            }
+
+            .ball-preview::before,
+            .ball-preview::after {
+                content: '';
+                position: absolute;
+                background: #333;
+            }
+
+            .ball-preview::before {
+                width: 2px;
+                height: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .ball-preview::after {
+                width: 100%;
+                height: 2px;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+
+            .cone-preview {
+                width: 0;
+                height: 0;
+                border-left: 15px solid transparent;
+                border-right: 15px solid transparent;
+                border-bottom: 25px solid;
+            }
+
+            .dt-animation-controls {
+                margin-top: 15px;
+                padding-top: 15px;
+                border-top: 2px solid #e1e8ed;
+            }
+
+            .animation-timeline {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .dt-steps-list {
+                max-height: 300px;
+                overflow-y: auto;
+            }
+
+            .dt-step-item {
+                background: #f8f9fa;
+                border: 2px solid #dee2e6;
+                border-radius: 6px;
+                padding: 10px;
+                margin-bottom: 8px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .dt-step-item:hover {
+                background: #e9ecef;
+                border-color: #1e56a0;
+            }
+
+            .dt-step-item.active {
+                background: #1e56a0;
+                border-color: #1e56a0;
+                color: white;
+            }
+
+            .ejercicios-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+                max-height: 400px;
+                overflow-y: auto;
+            }
+
+            .ejercicio-card {
+                background: #f8f9fa;
+                border: 2px solid #dee2e6;
+                border-radius: 8px;
+                padding: 15px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .ejercicio-card:hover {
+                background: #e9ecef;
+                border-color: #1e56a0;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+            .ejercicio-card h6 {
+                color: #1e56a0;
+                margin-bottom: 8px;
+                font-weight: 600;
+            }
+
+            .ejercicio-badge {
+                display: inline-block;
+                padding: 3px 8px;
+                border-radius: 4px;
+                font-size: 11px;
+                font-weight: 600;
+                margin-right: 5px;
+            }
+
+            .badge-tecnico { background: #17a2b8; color: white; }
+            .badge-tactico { background: #28a745; color: white; }
+            .badge-fisico { background: #ffc107; color: #333; }
+            .badge-estrategia { background: #6f42c1; color: white; }
+            .badge-calentamiento { background: #fd7e14; color: white; }
+        </style>
+    `;
+
+    // Remover estilos anteriores si existen
+    const oldStyles = document.getElementById('dt-module-styles');
+    if (oldStyles) oldStyles.remove();
+
+    // Agregar nuevos estilos
+    document.head.insertAdjacentHTML('beforeend', styles);
+}
+
+// Inicializar Canvas con Konva.js
+// Inicializar Canvas con Konva.js
+async function dtInitCanvas() {
+    // Verificar si Konva está cargado
+    if (typeof Konva === 'undefined') {
+        console.error('Konva.js no está cargado');
+        mostrarAlerta('Error: Librería Konva.js no encontrada', 'error');
+        return;
+    }
+
+    const container = document.getElementById('dtFieldCanvas');
+
+    // Esperar a que el contenedor tenga dimensiones
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Calcular dimensiones dinámicamente basándose en el contenedor
+    const containerWidth = container.clientWidth || container.offsetWidth;
+    const containerHeight = container.clientHeight || container.offsetHeight;
+
+    console.log('Contenedor dimensiones:', containerWidth, 'x', containerHeight);
+
+    // Actualizar configuración del campo con dimensiones reales
+    FIELD_CONFIG.width = containerWidth;
+    FIELD_CONFIG.height = containerHeight;
+
+    // Crear el stage con dimensiones del contenedor
+    stage = new Konva.Stage({
+        container: 'dtFieldCanvas',
+        width: containerWidth,
+        height: containerHeight
+    });
+
+    // Crear capas
+    fieldLayer = new Konva.Layer();
+    drawingLayer = new Konva.Layer();
+    playersLayer = new Konva.Layer();
+    animationLayer = new Konva.Layer();
+
+    // Cargar imagen del campo
+    const fieldImage = new Image();
+    fieldImage.onload = function () {
+        // Obtener dimensiones reales de la imagen
+        const imgWidth = fieldImage.width;
+        const imgHeight = fieldImage.height;
+        const imgRatio = imgWidth / imgHeight;
+
+        // Obtener dimensiones del contenedor
+        const containerWidth = FIELD_CONFIG.width;
+        const containerHeight = FIELD_CONFIG.height;
+        const containerRatio = containerWidth / containerHeight;
+
+        let renderWidth, renderHeight;
+
+        // Algoritmo COVER: La imagen debe cubrir TODO el contenedor
+        // Siempre usar las dimensiones exactas del contenedor
+        if (imgRatio > containerRatio) {
+            // Imagen más ancha - ajustar por altura para llenar
+            renderHeight = containerHeight;
+            renderWidth = containerHeight * imgRatio;
+        } else {
+            // Imagen más alta - ajustar por ancho para llenar
+            renderWidth = containerWidth;
+            renderHeight = containerWidth / imgRatio;
+        }
+
+        // Calcular offsets para centrar la parte visible
+        const offsetX = -(renderWidth - containerWidth) / 2;
+        const offsetY = -(renderHeight - containerHeight) / 2;
+
+        // Crear rectángulo de fondo para evitar espacios vacíos
+        const background = new Konva.Rect({
+            x: 0,
+            y: 0,
+            width: containerWidth,
+            height: containerHeight,
+            fill: '#2d5016'
+        });
+
+        // Crear la imagen con las dimensiones calculadas
+        const field = new Konva.Image({
+            x: offsetX,
+            y: offsetY,
+            image: fieldImage,
+            width: renderWidth,
+            height: renderHeight
+        });
+
+        // Limpiar capa anterior si existe
+        fieldLayer.destroyChildren();
+        fieldLayer.add(background);
+        fieldLayer.add(field);
+        fieldLayer.batchDraw();
+
+        console.log('✅ Campo cargado:', {
+            container: `${containerWidth}x${containerHeight}`,
+            image: `${imgWidth}x${imgHeight}`,
+            render: `${Math.round(renderWidth)}x${Math.round(renderHeight)}`,
+            offset: `(${Math.round(offsetX)}, ${Math.round(offsetY)})`,
+            ratios: `img=${imgRatio.toFixed(2)}, container=${containerRatio.toFixed(2)}`
+        });
+    };
+
+    fieldImage.onerror = function () {
+        console.error('Error al cargar la imagen de la cancha');
+        mostrarAlerta('Error al cargar la imagen de la cancha', 'error');
+    };
+
+    fieldImage.src = 'img/cancha.jpg';
+
+    // Agregar capas al stage
+    stage.add(fieldLayer);
+    stage.add(drawingLayer);
+    stage.add(playersLayer);
+    stage.add(animationLayer);
+
+    // Inicializar pasos de animación
+    animationSteps = [dtCaptureCurrentState()];
+    dtUpdateStepsUI();
+
+    // Hacer el canvas responsive al redimensionar ventana
+    window.addEventListener('resize', dtResizeCanvas);
+}
+
+// Función para redimensionar el canvas
+function dtResizeCanvas() {
+    if (!stage) return;
+
+    const container = document.getElementById('dtFieldCanvas');
+    const containerWidth = container.clientWidth || container.offsetWidth;
+    const containerHeight = container.clientHeight || container.offsetHeight;
+
+    // Actualizar tamaño del stage
+    stage.width(containerWidth);
+    stage.height(containerHeight);
+
+    // Actualizar configuración
+    FIELD_CONFIG.width = containerWidth;
+    FIELD_CONFIG.height = containerHeight;
+
+    // Redibujar todas las capas
+    stage.batchDraw();
+}
+
+// Establecer herramienta activa
+function dtSetTool(tool) {
+    currentTool = tool;
+
+    // Actualizar UI
+    document.querySelectorAll('.dt-tool-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    const btn = document.querySelector(`[data-tool="${tool}"]`);
+    if (btn) btn.classList.add('active');
+
+    // Configurar modo de dibujo
+    isDrawingMode = (tool === 'draw' || tool === 'arrow' || tool === 'zone');
+}
+
+// Agregar jugador
+function dtAddPlayer(team) {
+    const color = TEAM_COLORS[team];
+    const x = FIELD_CONFIG.width / 2 + (Math.random() - 0.5) * 100;
+    const y = FIELD_CONFIG.height / 2 + (Math.random() - 0.5) * 100;
+
+    const group = new Konva.Group({
+        x: x,
+        y: y,
+        draggable: true,
+        name: 'player'
+    });
+
+    // Círculo del jugador
+    const circle = new Konva.Circle({
+        radius: 20,
+        fill: color,
+        stroke: 'white',
+        strokeWidth: 3,
+        shadowColor: 'black',
+        shadowBlur: 5,
+        shadowOpacity: 0.3
+    });
+
+    // Número del jugador
+    const text = new Konva.Text({
+        text: playerCounter.toString(),
+        fontSize: 16,
+        fontFamily: 'Roboto, Arial',
+        fill: 'white',
+        fontStyle: 'bold',
+        align: 'center',
+        verticalAlign: 'middle',
+        width: 40,
+        height: 40,
+        offsetX: 20,
+        offsetY: 20
+    });
+
+    group.add(circle);
+    group.add(text);
+
+    // Eventos
+    group.on('click', function () {
+        dtSelectElement(group);
+    });
+
+    group.on('dragend', function () {
+        if (currentStep > 0) {
+            // Actualizar posición en el paso actual
+            dtUpdateCurrentStep();
+        }
+    });
+
+    playersLayer.add(group);
+    playersLayer.draw();
+
+    playerCounter++;
+}
+
+// Agregar balón
+function dtAddBall() {
+    const x = FIELD_CONFIG.width / 2;
+    const y = FIELD_CONFIG.height / 2;
+
+    const ball = new Konva.Circle({
+        x: x,
+        y: y,
+        radius: 12,
+        fill: 'white',
+        stroke: '#333',
+        strokeWidth: 2,
+        draggable: true,
+        name: 'ball',
+        shadowColor: 'black',
+        shadowBlur: 5,
+        shadowOpacity: 0.3
+    });
+
+    // Líneas del balón
+    const line1 = new Konva.Line({
+        points: [0, -12, 0, 12],
+        stroke: '#333',
+        strokeWidth: 2
+    });
+
+    const line2 = new Konva.Line({
+        points: [-12, 0, 12, 0],
+        stroke: '#333',
+        strokeWidth: 2
+    });
+
+    const group = new Konva.Group({
+        x: x,
+        y: y,
+        draggable: true,
+        name: 'ball'
+    });
+
+    group.add(ball);
+    group.add(line1);
+    group.add(line2);
+
+    group.on('click', function () {
+        dtSelectElement(group);
+    });
+
+    playersLayer.add(group);
+    playersLayer.draw();
+}
+
+// Agregar cono
+function dtAddCone(color) {
+    const colorMap = {
+        orange: '#FF8C00',
+        yellow: '#FFD700'
+    };
+
+    const x = FIELD_CONFIG.width / 2 + (Math.random() - 0.5) * 100;
+    const y = FIELD_CONFIG.height / 2 + (Math.random() - 0.5) * 100;
+
+    const cone = new Konva.RegularPolygon({
+        x: x,
+        y: y,
+        sides: 3,
+        radius: 15,
+        fill: colorMap[color],
+        stroke: '#333',
+        strokeWidth: 2,
+        draggable: true,
+        name: 'cone',
+        rotation: 180
+    });
+
+    cone.on('click', function () {
+        dtSelectElement(cone);
+    });
+
+    playersLayer.add(cone);
+    playersLayer.draw();
+
+    coneCounter++;
+}
+
+// Agregar arco
+function dtAddGoal() {
+    const x = FIELD_CONFIG.width / 2;
+    const y = 50;
+
+    const goal = new Konva.Rect({
+        x: x - 40,
+        y: y,
+        width: 80,
+        height: 5,
+        fill: 'white',
+        stroke: '#333',
+        strokeWidth: 2,
+        draggable: true,
+        name: 'goal'
+    });
+
+    const post1 = new Konva.Rect({
+        x: x - 40,
+        y: y,
+        width: 5,
+        height: 30,
+        fill: 'white',
+        stroke: '#333',
+        strokeWidth: 2
+    });
+
+    const post2 = new Konva.Rect({
+        x: x + 35,
+        y: y,
+        width: 5,
+        height: 30,
+        fill: 'white',
+        stroke: '#333',
+        strokeWidth: 2
+    });
+
+    const group = new Konva.Group({
+        draggable: true,
+        name: 'goal'
+    });
+
+    group.add(goal);
+    group.add(post1);
+    group.add(post2);
+
+    group.on('click', function () {
+        dtSelectElement(group);
+    });
+
+    playersLayer.add(group);
+    playersLayer.draw();
+}
+
+// Seleccionar elemento
+function dtSelectElement(element) {
+    // Deseleccionar elemento anterior
+    if (selectedElement) {
+        selectedElement.stroke('');
+        selectedElement.strokeWidth(0);
+    }
+
+    selectedElement = element;
+
+    // Resaltar elemento seleccionado
+    if (element.getClassName() === 'Group') {
+        element.children[0].stroke('#FFD700');
+        element.children[0].strokeWidth(3);
+    } else {
+        element.stroke('#FFD700');
+        element.strokeWidth(3);
+    }
+
+    playersLayer.draw();
+
+    // Actualizar panel de propiedades
+    dtUpdatePropertiesPanel(element);
+}
+
+// Actualizar panel de propiedades
+function dtUpdatePropertiesPanel(element) {
+    const panel = document.getElementById('dtPropertiesContent');
+
+    if (!element) {
+        panel.innerHTML = '<p class="text-muted text-center">Selecciona un elemento</p>';
+        return;
+    }
+
+    const name = element.name();
+    const x = Math.round(element.x());
+    const y = Math.round(element.y());
+
+    panel.innerHTML = `
+        <div class="mb-3">
+            <label class="form-label"><strong>Tipo:</strong></label>
+            <p>${name}</p>
+        </div>
+        <div class="mb-3">
+            <label class="form-label"><strong>Posición X:</strong></label>
+            <input type="number" class="form-control form-control-sm" value="${x}" onchange="dtUpdateElementX(${x}, this.value)">
+        </div>
+        <div class="mb-3">
+            <label class="form-label"><strong>Posición Y:</strong></label>
+            <input type="number" class="form-control form-control-sm" value="${y}" onchange="dtUpdateElementY(${y}, this.value)">
+        </div>
+    `;
+}
+
+// Eliminar elemento seleccionado
+function dtDeleteSelected() {
+    if (selectedElement) {
+        selectedElement.destroy();
+        selectedElement = null;
+        playersLayer.draw();
+        dtUpdatePropertiesPanel(null);
+    }
+}
+
+// Limpiar campo
+async function dtClearField() {
+    if (await confirmarAccion('¿Estás seguro de limpiar todo el campo?')) {
+        playersLayer.destroyChildren();
+        drawingLayer.destroyChildren();
+        playersLayer.draw();
+        drawingLayer.draw();
+        selectedElement = null;
+        playerCounter = 1;
+        coneCounter = 1;
+        animationSteps = [dtCaptureCurrentState()];
+        currentStep = 0;
+        dtUpdateStepsUI();
+    }
+}
+
+// Capturar estado actual del campo
+function dtCaptureCurrentState() {
+    const state = {
+        players: [],
+        objects: [],
+        timestamp: Date.now()
+    };
+
+    playersLayer.children.forEach(child => {
+        state.players.push({
+            id: child._id,
+            name: child.name(),
+            x: child.x(),
+            y: child.y(),
+            attrs: child.attrs
+        });
+    });
+
+    return state;
+}
+
+// Añadir paso de animación
+function dtAddAnimationStep() {
+    const newState = dtCaptureCurrentState();
+    animationSteps.push(newState);
+    currentStep = animationSteps.length - 1;
+    dtUpdateStepsUI();
+    mostrarAlerta('Paso de animación añadido', 'success');
+}
+
+// Actualizar UI de pasos
+function dtUpdateStepsUI() {
+    document.getElementById('dtCurrentStep').textContent = currentStep;
+    document.getElementById('dtTotalSteps').textContent = animationSteps.length - 1;
+
+    const stepsList = document.getElementById('dtStepsList');
+
+    if (animationSteps.length <= 1) {
+        stepsList.innerHTML = '<p class="text-muted text-center">No hay pasos de animación</p>';
+        return;
+    }
+
+    stepsList.innerHTML = animationSteps.map((step, index) => `
+        <div class="dt-step-item ${index === currentStep ? 'active' : ''}" onclick="dtGoToStep(${index})">
+            <strong>Paso ${index}</strong>
+            <div class="text-muted" style="font-size: 12px;">
+                ${step.players.length} elementos
+            </div>
+        </div>
+    `).join('');
+}
+
+// Ir a un paso específico
+function dtGoToStep(stepIndex) {
+    if (stepIndex < 0 || stepIndex >= animationSteps.length) return;
+
+    currentStep = stepIndex;
+    const state = animationSteps[stepIndex];
+
+    // Restaurar estado
+    playersLayer.destroyChildren();
+
+    // Recrear elementos (simplificado - en producción necesitarías recrear cada tipo)
+    state.players.forEach(playerData => {
+        // Aquí iría la lógica para recrear cada elemento según su tipo
+    });
+
+    playersLayer.draw();
+    dtUpdateStepsUI();
+}
+
+// Reproducir animación
+function dtPlayAnimation() {
+    if (animationSteps.length <= 1) {
+        mostrarAlerta('Añade al menos un paso de animación', 'warning');
+        return;
+    }
+
+    if (isAnimating) return;
+
+    isAnimating = true;
+    mostrarAlerta('Reproduciendo animación...', 'info');
+
+    // Aquí iría la lógica de animación con GSAP
+    // Por ahora, una versión simplificada
+    let step = 0;
+    const interval = setInterval(() => {
+        if (step >= animationSteps.length) {
+            clearInterval(interval);
+            isAnimating = false;
+            mostrarAlerta('Animación completada', 'success');
+            return;
+        }
+
+        dtGoToStep(step);
+        step++;
+    }, 1000);
+}
+
+// Pausar animación
+function dtPauseAnimation() {
+    isAnimating = false;
+    mostrarAlerta('Animación pausada', 'info');
+}
+
+// Detener animación
+function dtStopAnimation() {
+    isAnimating = false;
+    dtGoToStep(0);
+    mostrarAlerta('Animación detenida', 'info');
+}
+
+// Nuevo ejercicio
+function dtNuevoEjercicio() {
+    dtClearField();
+}
+
+// Guardar ejercicio
+function dtGuardarEjercicio() {
+    document.getElementById('formGuardarEjercicio').reset();
+    document.getElementById('ejercicioId').value = '';
+    new bootstrap.Modal(document.getElementById('modalGuardarEjercicio')).show();
+}
+
+// Confirmar guardar ejercicio
+async function dtGuardarEjercicioConfirm() {
+    const nombre = document.getElementById('ejercicioNombre').value;
+    const categoria = document.getElementById('ejercicioCategoria').value;
+    const descripcion = document.getElementById('ejercicioDescripcion').value;
+    const duracion = document.getElementById('ejercicioDuracion').value;
+
+    if (!nombre) {
+        mostrarAlerta('Ingresa un nombre para el ejercicio', 'warning');
+        return;
+    }
+
+    const empresa = getCurrentEmpresa();
+
+    // Capturar imagen del canvas
+    const dataURL = stage.toDataURL();
+
+    const ejercicio = {
+        empresaId: empresa.id,
+        nombre: nombre,
+        categoria: categoria,
+        descripcion: descripcion,
+        duracion: parseInt(duracion) || 0,
+        canvasData: stage.toJSON(),
+        preview: dataURL,
+        animationSteps: animationSteps,
+        fechaCreacion: new Date().toISOString()
+    };
+
+    try {
+        await addData('ejercicios_tacticos', ejercicio);
+        mostrarAlerta('Ejercicio guardado correctamente', 'success');
+        bootstrap.Modal.getInstance(document.getElementById('modalGuardarEjercicio')).hide();
+    } catch (error) {
+        console.error('Error al guardar ejercicio:', error);
+        mostrarAlerta('Error al guardar el ejercicio', 'error');
+    }
+}
+
+// Cargar ejercicios
+async function dtCargarEjercicios() {
+    const empresa = getCurrentEmpresa();
+    const ejercicios = await getDataByEmpresa('ejercicios_tacticos', empresa.id);
+
+    const lista = document.getElementById('listaEjercicios');
+
+    if (ejercicios.length === 0) {
+        lista.innerHTML = '<p class="text-muted text-center">No hay ejercicios guardados</p>';
+    } else {
+        lista.innerHTML = ejercicios.map(ej => `
+            <div class="ejercicio-card" onclick="dtCargarEjercicio(${ej.id})">
+                <h6>${ej.nombre}</h6>
+                <span class="ejercicio-badge badge-${ej.categoria}">${ej.categoria}</span>
+                ${ej.duracion ? `<span class="text-muted">${ej.duracion} min</span>` : ''}
+                <p class="text-muted mb-0" style="font-size: 12px; margin-top: 8px;">
+                    ${ej.descripcion || 'Sin descripción'}
+                </p>
+            </div>
+        `).join('');
+    }
+
+    new bootstrap.Modal(document.getElementById('modalCargarEjercicios')).show();
+}
+
+// Cargar un ejercicio específico
+async function dtCargarEjercicio(id) {
+    const ejercicio = await getData('ejercicios_tacticos', id);
+
+    if (!ejercicio) return;
+
+    try {
+        // Limpiar campo actual
+        playersLayer.destroyChildren();
+        drawingLayer.destroyChildren();
+
+        // Cargar datos del canvas
+        const json = ejercicio.canvasData;
+        stage = Konva.Node.create(json, 'dtFieldCanvas');
+
+        // Restaurar pasos de animación
+        animationSteps = ejercicio.animationSteps || [dtCaptureCurrentState()];
+        currentStep = 0;
+
+        dtUpdateStepsUI();
+
+        bootstrap.Modal.getInstance(document.getElementById('modalCargarEjercicios')).hide();
+        mostrarAlerta('Ejercicio cargado correctamente', 'success');
+    } catch (error) {
+        console.error('Error al cargar ejercicio:', error);
+        mostrarAlerta('Error al cargar el ejercicio', 'error');
+    }
+}
+
+// Exportar como imagen
+function dtExportarImagen() {
+    const dataURL = stage.toDataURL({
+        pixelRatio: 2
+    });
+
+    const link = document.createElement('a');
+    link.download = `ejercicio_${Date.now()}.jpg`;
+    link.href = dataURL;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    mostrarAlerta('Imagen exportada correctamente', 'success');
+}
+
+// Exportar como video (placeholder)
+function dtExportarVideo() {
+    mostrarAlerta('Función de exportación a video en desarrollo. Por ahora puedes exportar como imagen.', 'info');
+}
+
+// Actualizar paso actual
+function dtUpdateCurrentStep() {
+    if (currentStep > 0) {
+        animationSteps[currentStep] = dtCaptureCurrentState();
+    }
+}
+

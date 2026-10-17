@@ -1,0 +1,2045 @@
+:root {
+    --primary-blue: #1e56a0;
+    --secondary-blue: #2d7dd2;
+    --light-blue: #85c7f2;
+    --very-light-blue: #d6eaf8;
+    --white: #ffffff;
+    --gray-light: #f8f9fa;
+    --gray-medium: #dee2e6;
+    --gray-dark: #495057;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --text-dark: #212529;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #CDB8D8;
+    min-height: 100vh;
+}
+
+/* LOGIN STYLES */
+.login-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+}
+
+.login-container {
+    width: 100%;
+    max-width: 450px;
+}
+
+.login-card {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: var(--white);
+    padding: 40px 30px;
+    text-align: center;
+}
+
+.login-header i {
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+.login-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.login-header p {
+    font-size: 14px;
+    opacity: 0.9;
+    margin: 0;
+}
+
+.login-form-container {
+    padding: 40px 30px;
+}
+
+.btn-login {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: transform 0.2s;
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(30, 86, 160, 0.4);
+}
+
+/* DASHBOARD STYLES */
+.dashboard-body {
+    background: #CDB8D8;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    background: linear-gradient(180deg, var(--primary-blue), var(--secondary-blue));
+    color: var(--white);
+    overflow-y: auto;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-header {
+    padding: 25px 20px;
+    background: rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-header h4 {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0;
+}
+
+.sidebar-header p {
+    font-size: 13px;
+    opacity: 0.8;
+    margin: 5px 0 0 0;
+}
+
+.sidebar-menu {
+    padding: 20px 0;
+}
+
+.menu-item {
+    padding: 15px 25px;
+    color: var(--white);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s;
+    border-left: 4px solid transparent;
+}
+
+.menu-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-left-color: var(--light-blue);
+    color: var(--white);
+}
+
+.menu-item.active {
+    background: rgba(255, 255, 255, 0.15);
+    border-left-color: var(--white);
+    font-weight: 600;
+}
+
+.menu-item i {
+    font-size: 20px;
+    margin-right: 15px;
+    width: 25px;
+    text-align: center;
+}
+
+.main-content {
+    margin-left: 0;
+    min-height: 100vh;
+    padding: 0;
+}
+
+.top-navbar {
+    background: linear-gradient(90deg, #4b2e83 0%, #6a42c1 50%, #b57edc 100%);
+    color: #ffffff;
+    padding: 15px 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 1001;
+}
+
+.navbar-title h5 {
+    margin: 0;
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: 22px;
+}
+
+.navbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.top-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.top-menu .menu-item {
+    padding: 8px 12px;
+    color: var(--text-dark);
+    background: var(--white);
+    border-radius: 10px;
+    border-left: none;
+    text-decoration: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.top-menu .menu-item:hover {
+    background: var(--very-light-blue);
+}
+
+.top-menu .menu-item.active {
+    background: var(--very-light-blue);
+    font-weight: 600;
+    border-left: none;
+}
+
+.top-menu .menu-item i {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+.navbar-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.top-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.top-menu .menu-item {
+    padding: 8px 12px;
+    color: #ffffff;
+    background: #A7C7E7;
+    border-radius: 10px;
+    border: none;
+    text-decoration: none;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.top-menu .menu-item:hover {
+    background: #BBD6F5;
+    color: #ffffff;
+}
+
+.top-menu .menu-item.active {
+    background: #89BCEB;
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.top-menu .menu-item i {
+    margin-right: 8px;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+/* Encabezado superior con navegación horizontal */
+.navbar-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.brand {
+    display: none;
+}
+
+.top-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+}
+
+.top-menu .menu-item {
+    padding: 6px 10px;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    text-decoration: none;
+    box-shadow: none;
+    transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.top-menu .menu-item:hover {
+    background: rgba(255, 255, 255, 0.20);
+    border-color: rgba(255, 255, 255, 0.40);
+    transform: translateY(-1px);
+}
+
+.top-menu .menu-item.active {
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(255, 255, 255, 0.50);
+}
+
+.top-menu .menu-item i {
+    margin-right: 8px;
+    font-size: 18px;
+    color: #ffffff;
+}
+
+/* Botón Hamburguesa */
+.hamburger-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 35px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1001;
+    position: relative;
+}
+
+.hamburger-btn span {
+    width: 100%;
+    height: 3px;
+    background: #ffffff;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.hamburger-btn.active span:nth-child(1) {
+    transform: translateY(9px) rotate(45deg);
+}
+
+.hamburger-btn.active span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.hamburger-btn.active span:nth-child(3) {
+    transform: translateY(-9px) rotate(-45deg);
+}
+
+/* Media Query para dispositivos móviles */
+@media (max-width: 768px) {
+    .hamburger-btn {
+        display: flex;
+    }
+
+    .top-menu {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 280px;
+        height: 100vh;
+        background: linear-gradient(180deg, #4b2e83 0%, #6a42c1 50%, #b57edc 100%);
+        flex-direction: column;
+        padding: 80px 20px 20px;
+        gap: 0;
+        transition: left 0.3s ease;
+        overflow-y: auto;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        z-index: 1002;
+    }
+
+    .top-menu.active {
+        left: 0;
+    }
+
+    .top-menu .menu-item {
+        width: 100%;
+        padding: 15px 20px;
+        margin-bottom: 5px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: left;
+        display: flex;
+        align-items: center;
+    }
+
+    .top-menu .menu-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateX(5px);
+    }
+
+    .top-menu .menu-item.active {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .top-menu .menu-item i {
+        margin-right: 12px;
+        font-size: 20px;
+    }
+
+    /* Overlay para cerrar el menú al hacer clic fuera */
+    .menu-overlay.active {
+        display: block;
+    }
+
+    .navbar-left {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .brand {
+        display: flex !important;
+    }
+}
+
+/* Estilos para escritorio - asegurar que el menú se muestre normalmente */
+@media (min-width: 769px) {
+    .hamburger-btn {
+        display: none !important;
+    }
+
+    .top-menu {
+        position: static;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: auto;
+        height: auto;
+        background: transparent;
+        padding: 0;
+        gap: 6px;
+        box-shadow: none;
+    }
+
+    .menu-overlay {
+        display: none !important;
+    }
+}
+
+/* Overlay - oculto por defecto */
+.menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+.content-area {
+    padding: 30px;
+}
+
+.content-container {
+    width: 95%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* CARDS */
+.stat-card {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-left: 4px solid var(--primary-blue);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.stat-card .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-bottom: 15px;
+}
+
+.stat-card.blue .stat-icon {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: var(--white);
+}
+
+.stat-card.cyan .stat-icon {
+    background: linear-gradient(135deg, var(--light-blue), var(--secondary-blue));
+    color: var(--white);
+}
+
+.stat-card.success .stat-icon {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: var(--white);
+}
+
+.stat-card.warning .stat-icon {
+    background: linear-gradient(135deg, #ffc107, #ff8c00);
+    color: var(--white);
+}
+
+.stat-card.danger .stat-icon {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: var(--white);
+}
+
+.stat-card h6 {
+    color: var(--gray-dark);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.stat-card h3 {
+    color: var(--primary-blue);
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* MODULE CARD */
+.module-card {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 25px;
+}
+
+.ventas-panel .module-card,
+.ventas-panel .card {
+    border: 1px solid var(--light-blue);
+}
+
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--very-light-blue);
+}
+
+.module-header h4 {
+    color: var(--primary-blue);
+    font-weight: 700;
+    font-size: 22px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.module-header h4 i {
+    font-size: 26px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.header-actions select {
+    min-width: 250px;
+}
+
+/* BUTTONS */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    border: none;
+    padding: 10px 25px;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(30, 86, 160, 0.3);
+}
+
+.btn-secondary {
+    background: var(--gray-medium);
+    border: none;
+    color: var(--text-dark);
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    border: none;
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    border: none;
+}
+
+.btn-icon {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+/* TABLES */
+.table-modern {
+    background: var(--white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.table-modern thead {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: var(--white);
+}
+
+.table-modern thead th {
+    padding: 18px 15px;
+    font-weight: 600;
+    border: none;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+/* Encabezados celestes específicos para Gestión de Deportes */
+#tablaDeportes thead {
+    background: var(--very-light-blue) !important;
+    color: var(--text-dark) !important;
+}
+
+#tablaDeportes thead th {
+    background: transparent !important;
+    color: var(--text-dark) !important;
+    border: none;
+}
+
+#tablaCategorias thead {
+    background: var(--very-light-blue) !important;
+    color: var(--text-dark) !important;
+}
+
+#tablaCategorias thead th {
+    background: transparent !important;
+    color: var(--text-dark) !important;
+    border: none;
+}
+
+#tablaGastos thead {
+    background: var(--very-light-blue) !important;
+    color: var(--text-dark) !important;
+}
+
+#tablaGastos thead th {
+    background: transparent !important;
+    color: var(--text-dark) !important;
+    border: none;
+}
+
+.table-modern tbody tr {
+    transition: background 0.2s;
+}
+
+.table-modern tbody tr:hover {
+    background: var(--very-light-blue);
+}
+
+.table-modern tbody td {
+    padding: 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--gray-medium);
+}
+
+/* BADGES */
+.badge-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-cupo {
+    padding: 8px 16px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    display: inline-block;
+    min-width: 64px;
+    text-align: center;
+}
+
+.badge-alumnos {
+    padding: 8px 14px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1;
+    display: inline-block;
+    min-width: 48px;
+    text-align: center;
+}
+
+.badge-active {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-inactive {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.badge-paid {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-overdue {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* FORMS */
+.form-label {
+    font-weight: 600;
+    color: var(--gray-dark);
+    margin-bottom: 8px;
+}
+
+.form-control,
+.form-select {
+    border: 2px solid var(--gray-medium);
+    border-radius: 8px;
+    padding: 10px 15px;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--secondary-blue);
+    box-shadow: 0 0 0 0.2rem rgba(45, 125, 210, 0.15);
+}
+
+/* MODALS */
+.modal-content {
+    border-radius: 15px;
+    border: none;
+}
+
+.modal-header {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    border-bottom: none;
+    padding: 20px 25px;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    border-top: none;
+    padding: 15px 25px;
+}
+
+/* SEARCH BAR */
+.search-box {
+    position: relative;
+}
+
+.search-box input {
+    padding-left: 45px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-dark);
+}
+
+/* PHOTO PREVIEW */
+.photo-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    border: 3px solid var(--gray-medium);
+    object-fit: cover;
+    margin: 10px 0;
+}
+
+/* CREDENTIAL CARD */
+.credential-preview {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: var(--white);
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.credential-preview img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 4px solid var(--white);
+    object-fit: cover;
+}
+
+/* QR CODE */
+.qr-container {
+    background: var(--white);
+    padding: 15px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+/* SCHEDULE TABLE */
+.schedule-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.schedule-table th {
+    background: var(--primary-blue);
+    color: var(--white);
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.schedule-table td {
+    border: 1px solid var(--gray-medium);
+    padding: 10px;
+    height: 80px;
+    vertical-align: top;
+    background: var(--white);
+}
+
+.schedule-item {
+    background: var(--very-light-blue);
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    border-left: 3px solid var(--primary-blue);
+}
+
+/* ATTENDANCE GRID */
+.attendance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.attendance-item {
+    text-align: center;
+    padding: 15px;
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.attendance-item:hover {
+    transform: scale(1.05);
+}
+
+.attendance-item img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.attendance-item.checked {
+    background: var(--success);
+    color: var(--white);
+}
+
+/* CART */
+.cart-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: var(--gray-light);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 991px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-area {
+        padding: 15px;
+    }
+
+    .module-card {
+        padding: 20px;
+    }
+
+    .stat-card {
+        margin-bottom: 15px;
+    }
+
+    .table-modern {
+        font-size: 14px;
+    }
+
+    .module-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .header-actions .btn,
+    .header-actions select {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* LOADING */
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--white);
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ANIMATIONS */
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* PRINT STYLES */
+@media print {
+
+    .sidebar,
+    .top-navbar,
+    .btn,
+    .modal {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .module-card {
+        box-shadow: none;
+        border: 1px solid var(--gray-medium);
+    }
+}
+
+/* CUSTOM SCROLLBAR */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--gray-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--secondary-blue);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-blue);
+}
+
+/* ===============================================
+   EVALUACIONES DEPORTIVAS - MÓDULO ESPECÍFICO
+   =============================================== */
+
+.evaluaciones-container {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Tarjetas de Tipos de Evaluación */
+.eval-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.eval-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+}
+
+.eval-card:hover::before {
+    transform: scaleX(1);
+}
+
+.eval-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.eval-card .eval-icon {
+    font-size: 64px;
+    margin-bottom: 20px;
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.eval-card h5 {
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+
+.eval-card p {
+    color: #718096;
+    font-size: 14px;
+    margin-bottom: 20px;
+    min-height: 40px;
+}
+
+/* Gradientes específicos para cada tipo */
+.eval-fisica::before {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.eval-tecnica::before {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.eval-tactica::before {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.eval-psicologica::before {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.eval-medica::before {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.eval-progreso::before {
+    background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+}
+
+/* Tarjetas Antropométricas */
+.antropometrico-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.antropometrico-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+    transform: translateY(-5px);
+}
+
+.antropometrico-card i {
+    font-size: 32px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.antropometrico-card h6 {
+    color: #718096;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.antropometrico-card h4 {
+    color: #2d3748;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0;
+}
+
+/* Estilos para modales de evaluación */
+.modal-header {
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Inputs con efectos */
+.form-control:focus,
+.form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.15);
+}
+
+/* Badges personalizados */
+.badge {
+    padding: 8px 16px;
+    font-weight: 600;
+    border-radius: 20px;
+}
+
+/* Tabla de historial */
+#historialEvaluaciones tr {
+    transition: all 0.3s ease;
+}
+
+#historialEvaluaciones tr:hover {
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    transform: scale(1.01);
+}
+
+/* Leyenda de evaluaciones */
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.card-header {
+    border-bottom: none;
+    font-weight: 700;
+}
+
+/* Gráficos - Container */
+canvas {
+    max-height: 400px;
+}
+
+/* Efectos de carga */
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    border-width: 0.3em;
+}
+
+/* Botones con efectos */
+.btn {
+    border-radius: 10px;
+    font-weight: 600;
+    padding: 10px 24px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn i {
+    margin-right: 6px;
+}
+
+/* Alert personalizado */
+.alert {
+    border-radius: 12px;
+    border: none;
+    padding: 16px 20px;
+    font-weight: 500;
+}
+
+.alert-info {
+    background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+    color: #075985;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    color: #92400e;
+}
+
+/* Select mejorado */
+#selectAlumnoEval {
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 18px;
+    font-weight: 600;
+    color: #2d3748;
+    transition: all 0.3s ease;
+}
+
+#selectAlumnoEval:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .eval-card {
+        margin-bottom: 20px;
+    }
+
+    .antropometrico-card h4 {
+        font-size: 22px;
+    }
+
+    .modal-fullscreen {
+        padding: 0;
+    }
+}
+
+/* Animaciones adicionales */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.table-responsive {
+    animation: slideIn 0.5s ease;
+}
+
+/* Chart containers */
+.card-body canvas {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+/* Progreso modal específico */
+#modalProgreso .card {
+    transition: all 0.3s ease;
+}
+
+#modalProgreso .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Estados de inputs */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+/* Mejoras visuales para lectura */
+label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+/* Tooltips visuales */
+.form-label strong {
+    color: #2d3748;
+}
+
+/* Sombras suaves */
+.shadow-sm {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Headers de modal gradient */
+.modal-header.bg-primary,
+.modal-header.bg-success,
+.modal-header.bg-warning,
+.modal-header.bg-danger,
+.modal-header.bg-info,
+.modal-header.bg-dark {
+    color: white !important;
+}
+
+.modal-header.bg-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+/* Scrollbar personalizado para modales */
+.modal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+/* Metric Boxes para Detalle de Evaluación */
+.metric-box {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.metric-box:hover {
+    border-color: #667eea;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    transform: translateY(-2px);
+}
+
+.metric-label {
+    display: block;
+    font-size: 12px;
+    color: #718096;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+.metric-value {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.metric-box-sm {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 8px;
+}
+
+.metric-label-sm {
+    display: block;
+    font-size: 10px;
+    color: #718096;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.metric-value-sm {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+/* Estrellas de calificación */
+.bi-star-fill,
+.bi-star {
+    font-size: 18px;
+}
+
+/* Cards de Datos Antropométricos */
+.antropometrico-card {
+    background: white;
+    border: 3px solid #ff9800;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.15);
+}
+
+.antropometrico-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(255, 152, 0, 0.25);
+    border-color: #f57c00;
+}
+
+.antropometrico-card i {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.antropometrico-card h6 {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.antropometrico-card h4 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+/* ========================================
+   MÓDULO DE TORNEOS
+   ======================================== */
+
+/* Contenedor principal de torneos */
+.torneos-container {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.torneos-container .module-header h2 {
+    color: var(--primary-blue);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.torneos-container .header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Tabs de torneos */
+.torneos-tabs .nav-tabs {
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 25px;
+}
+
+.torneos-tabs .nav-link {
+    color: #6c757d;
+    font-weight: 600;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 12px 20px;
+    transition: all 0.3s;
+}
+
+.torneos-tabs .nav-link:hover {
+    color: var(--primary-blue);
+    border-bottom-color: var(--light-blue);
+}
+
+.torneos-tabs .nav-link.active {
+    color: var(--primary-blue);
+    background: transparent;
+    border-bottom-color: var(--primary-blue);
+}
+
+/* Grid de torneos */
+.torneos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+    gap: 20px;
+}
+
+/* Card de torneo */
+.torneo-card {
+    border: 1px solid #0d6efd;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.torneo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.torneo-card .card-header {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    padding: 20px;
+    border-bottom: none;
+    text-align: center;
+}
+
+.torneo-card .card-header h5 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.torneo-card .card-body p {
+    margin-bottom: 10px;
+    color: #495057;
+}
+
+.torneo-card .card-footer {
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    padding: 15px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue)) !important;
+}
+
+/* Grid de equipos */
+.tab-content,
+.tab-pane {
+    width: 100%;
+}
+
+.equipos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+/* Card de equipo */
+.equipo-card {
+    border: 1px solid #0d6efd;
+    /* Se sobrescribe dinámicamente */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    min-height: 350px;
+    /* Altura más equilibrada */
+    display: flex;
+    flex-direction: column;
+}
+
+.equipo-card .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.jugadores-list-enumerada {
+    list-style-type: decimal;
+    padding-left: 20px;
+    margin-top: 10px;
+    max-height: 320px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.jugadores-list-enumerada li {
+    color: #000;
+    padding: 4px 0;
+    font-size: 0.95rem;
+    border-bottom: 1px solid #eee;
+}
+
+.equipo-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.equipo-card .card-header {
+    padding: 15px;
+    border-bottom: none;
+}
+
+.equipo-card .card-header h5 {
+    margin: 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.equipo-card .card-body {
+    padding: 15px;
+}
+
+.jugadores-list-small {
+    max-height: 120px;
+    overflow-y: auto;
+    margin-top: 10px;
+}
+
+.jugadores-list-small .badge {
+    font-size: 11px;
+    margin-bottom: 5px;
+}
+
+/* Lista de jugadores */
+.jugadores-list {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.jugadores-list .list-group-item {
+    cursor: pointer;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    transition: all 0.2s;
+}
+
+.jugadores-list .list-group-item:hover {
+    background: var(--very-light-blue);
+    transform: translateX(5px);
+}
+
+/* Jugadores seleccionados */
+.jugadores-selected {
+    min-height: 80px;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    background: #f8f9fa;
+}
+
+.jugadores-selected .badge {
+    font-size: 13px;
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.jugadores-selected .badge i {
+    transition: transform 0.2s;
+}
+
+.jugadores-selected .badge:hover i {
+    transform: scale(1.2);
+}
+
+/* Selección de equipos para torneo */
+.equipos-selection {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    background: #f8f9fa;
+}
+
+.equipos-selection .form-check {
+    padding: 10px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.equipos-selection .form-check:hover {
+    background: white;
+}
+
+/* Lista de partidos */
+.partidos-list {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.partidos-list .table {
+    margin-bottom: 0;
+}
+
+.partidos-list .table thead {
+    background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
+    color: white;
+}
+
+.partidos-list .table thead th {
+    border: none;
+    padding: 15px;
+    font-weight: 600;
+}
+
+.partidos-list .table tbody tr {
+    transition: background 0.2s;
+}
+
+.partidos-list .table tbody tr:hover {
+    background: var(--very-light-blue);
+}
+
+.partidos-list .table tbody td {
+    padding: 15px;
+    vertical-align: middle;
+}
+
+/* Tarjetas de partidos (estilo imagen) */
+.partidos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 18px;
+}
+
+.partido-card {
+    background: #fff;
+    border: 3px solid #85c7f2;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.partido-header {
+    background: #eaf6ff;
+    padding: 14px 16px;
+    border-bottom: 1px solid #dbe8ff;
+    text-align: center;
+}
+
+.partido-torneo {
+    font-weight: 600;
+    color: #495057;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.partido-meta {
+    color: #6c757d;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.partido-fase {
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+.partido-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: center;
+    justify-items: center;
+    padding: 18px 16px;
+}
+
+.team-info,
+.team-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.team-logo-box {
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-weight: 800;
+    font-size: 34px;
+    box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.6);
+}
+
+.team-bye {
+    background: #adb5bd;
+    color: #fff;
+    box-shadow: none;
+}
+
+.team-name {
+    font-weight: 600;
+    color: #1f1f1f;
+    line-height: 1.1;
+}
+
+.team-score {
+    color: #0d6efd;
+    font-weight: 800;
+    font-size: 40px;
+    text-align: center;
+}
+
+.partido-lugar {
+    padding: 0 16px 10px;
+    color: #6c757d;
+    font-size: 13px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.partido-footer {
+    padding: 10px 16px 16px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.btn-partido-action {
+    border: none;
+    border-radius: 9999px;
+    padding: 10px 18px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-partido-edit {
+    background: #0d6efd;
+    color: #fff;
+}
+
+.btn-partido-edit:hover {
+    filter: brightness(1.05);
+}
+
+.btn-partido-delete {
+    background: #dc3545;
+    color: #fff;
+}
+
+.btn-partido-delete:hover {
+    filter: brightness(1.05);
+}
+
+/* Contador de jugadores */
+#countJugadores {
+    font-weight: 700;
+    color: var(--primary-blue);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.torneo-card,
+.equipo-card {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Responsive para torneos */
+@media (max-width: 768px) {
+
+    .torneos-grid,
+    .equipos-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .torneos-container .header-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .torneos-container .header-actions .btn {
+        width: 100%;
+    }
+}

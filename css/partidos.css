@@ -1,0 +1,170 @@
+/* Grid de Partidos */
+.partidos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    padding: 15px;
+}
+
+.partido-card {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    display: flex;
+    flex-direction: column;
+}
+
+.partido-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* Header */
+.partido-header {
+    background: #f1f4f9;
+    /* Color gris muy suave como en la imagen */
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #eef2f6;
+}
+
+.partido-torneo {
+    font-size: 1rem;
+    color: #444;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.partido-meta {
+    font-size: 0.9rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 5px;
+}
+
+.partido-fase {
+    font-weight: 700;
+    color: #222;
+    font-size: 1.1rem;
+}
+
+/* Body */
+.partido-body {
+    padding: 30px 20px;
+    display: flex;
+    justify-content: space-around;
+    /* Separación entre equipos */
+    align-items: flex-start;
+    flex-grow: 1;
+}
+
+.team-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 45%;
+    text-align: center;
+}
+
+/* Recuadro / Escudo del equipo */
+.team-logo-box {
+    width: 80px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    /* Forma de escudo simplificada */
+    clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.team-name {
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.3;
+    color: #000;
+    margin-bottom: 15px;
+    height: 42px;
+    /* Altura fija para alineación */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.team-score {
+    font-size: 3.5rem;
+    font-weight: 800;
+    color: #2563eb;
+    /* Azul intenso */
+    line-height: 1;
+    text-shadow: 2px 2px 0px rgba(37, 99, 235, 0.1);
+}
+
+/* Footer */
+.partido-footer {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    background: #fff;
+    padding-top: 0;
+    /* Pegado al body */
+}
+
+.btn-partido-action {
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-weight: 600;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-partido-edit {
+    background-color: #2563eb;
+    /* Azul */
+    color: white;
+    flex-grow: 0;
+    min-width: 120px;
+}
+
+.btn-partido-edit:hover {
+    background-color: #1d4ed8;
+    transform: translateY(-2px);
+}
+
+.btn-partido-delete {
+    background-color: #dc2626;
+    /* Rojo */
+    color: white;
+    width: 48px;
+    /* Cuadrado/Redondo */
+    padding: 10px 0;
+}
+
+.btn-partido-delete:hover {
+    background-color: #b91c1c;
+    transform: translateY(-2px);
+}
